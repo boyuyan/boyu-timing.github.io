@@ -1,6 +1,6 @@
 int trigPin = 11;    // Trigger
 int echoPin = 12;    // Echo
-long duration, cm, inches;
+long duration, cm;
  
 void setup() {
   //Serial Port begin
