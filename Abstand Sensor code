@@ -1,6 +1,10 @@
 int trigPin = 11;    // Trigger
 int echoPin = 12;    // Echo
+int val; 
 long duration, cm;
+#include <Servo.h>
+
+Servo myservo; 
  
 void setup() {
   //Serial Port begin
@@ -8,6 +12,7 @@ void setup() {
   //Define inputs and outputs
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
+  myservo.attach(9); 
 }
  
 void loop() {
@@ -26,11 +31,21 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
  
   // Convert the time into a distance
-  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
+  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343 
+
+  if ( 20 < int(cm) < 180){
+    myservo.write(cm);
+  } 
+  else if ( int(cm) < 20){
+    myservo.write(0);
+  }
+  else {
+    myservo.write(180);
+  }
   
   Serial.print(cm);
   Serial.print("cm");
   Serial.println();
   
-  delay(250);
+  delay(100);
 }
