@@ -39,19 +39,19 @@ void loop() {
 
 
 
-  if (int(cm) < 50){
-    if ( int(cm) < 10){
+  if (int(cm) < 100){
+    if ( int(cm) < 30){
     myservo.write(0);
   } 
-  else if (10 < int(cm) < 50){
-    myservo.write(map(cm,10,50,10,180));
+  else if (30 < int(cm) < 100){
+    myservo.write(map(cm,30,100,30,180));
     for (int i=0; i < 100; i++){
     analogWrite(LED, i);   
-    delay(map(cm,10,50,1,10));                       
+    delay(map(cm,30,100,1,10));                       
     }
     for (int i = 100; i > 0; i--){
     analogWrite(LED, i);   
-    delay(map(cm,10,50,1,10));                       
+    delay(map(cm,30,100,1,10));                       
     }
   }
   }
