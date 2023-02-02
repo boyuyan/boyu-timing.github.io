@@ -2,19 +2,21 @@
 all about timing code
 
 Lieber Martin,
-ich habe meine Code von Abstand Sensor hochgeladen (File:Abstand Sensor code ). 
-Ich brauche auch die LED Panel und den Servomotor zu ändern, je nach den Daten aus dem Abstandssensor.
+Hier ist mein neu User Experience
+ich möchte gerne jetzt LED blinken statt fade, da die neue Situation kompliziert ist. Mit blinken kann man schnell die Änderung sehen.
 
-Ich brauche folgende Hilfe bei Coding von Ihnen:
+Abstand weniger als 30 cm:
+Servomotor in 0 Grad , LED komplett aus
 
-Abstandsensor Code: Der Sensor misst nur Daten zwischen 0 und 180 cm. Andere Daten werden ignoriert.
+Abstand von 30-100 cm:
+Situation 1: Wenn eine Person sich dem Gerät langsam nähert oder sich von ihm entfernt (Abstand ändert sich weniger als 10cm pro 500ms),  wird der Servomotor angehalten, aber die LED blinkt schneller oder langsamer 
+Situation 2: Wenn eine Person sich etwas schnell dem Gerät nähert oder sich von ihm entfernt (Abstand ändert sich mehr als 10cm pro 500ms.),  laufen der Servomotor und LED gleich wie bisher
+Situation 3: Wenn eine Person sich sehr schnell dem Gerät nähert oder sich von ihm entfernt (Abstand ändert sich mehr als 40cm pro 500ms.), dreht der Servomotor direkt bis 0 Grad, regal in welchem Winkel das Motor vorher war. LED komplett aus.
 
-Servo Motor Code: Der Drehwinkel des Servomotors ist auf 0 bis 180 Grad begrenzt. Der Winkel des Servomotors entspricht dem vom Abstandssensor gemessenen Wert, z. B. wenn die Person 50 cm vom Sensor entfernt ist, beträgt der Winkel des Servomotors 50 Grad. Bei einer Entfernung von 180 cm beträgt der Winkel 180 Grad. Der Winkel wird pro 1 cm Abstand zwischen der Person und dem Abstandssensor um 1 Grad verringert. 
+Abstand mehr als 100cm:
+Servo Motor in 180 Grad , LED komplett aus
 
-Servo Motor Code besondere Timing: Der Servomotor dreht sich so schnell wie möglich auf 0 Grad, wenn sich eine Person weniger als 20 cm vom Sensor entfernt befindet.
 
-Led Code:Das LED-Licht schaltet sich nicht ein, wenn der Sensor eine Person in einer Entfernung von mehr als 180 cm erkennt. Bei einer Entfernung von weniger als 180 cm beginnt das LED-Licht langsam zu verblassen(fading). Je geringer der Abstand zwischen der Person und dem Sensor wird, desto schneller wird das Licht verblassen(fading). Wenn der Servomotor auf 0 Grad dreht, erreicht die Fading-frequenz ihr Maximum.
-
+Kannst du bitte mir helfen den Code zu ändern.
+der aktulle Code liegt in andere File
 vielen Dank
-mit besten Grüßen
-boyu
