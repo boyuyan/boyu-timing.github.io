@@ -1,5 +1,5 @@
 # boyu-timing.github.io
-all about timing code
+Stand 02.Feb.2023
 
 Lieber Martin,
 Hier ist mein neu User Experience
