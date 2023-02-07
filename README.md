@@ -29,6 +29,21 @@ Situation 3: Wenn eine Person sich sehr schnell dem Gerät nähert oder sich von
 <Abstand mehr als 100cm>: Servo Motor in 180 Grad , LED komplett aus
 
 
+
+repeat again in english
+
+If the distance is less than 30cm, the servo motor will be set to 0 degrees and the LED will be turned off. 
+
+If the distance is between 30-100cm, there are three different situations:
+
+1. If the distance changes by less than 10cm per 500ms, the servo motor will not move and the LED will blink either slowly or fast based on the distance.(long distance blink slowly, short distance blink quickly)
+
+2. If the distance changes by more than 10cm per 500ms, the servo motor will rotate by 2 degrees for every 1cm change in distance and the LED will blink either slowly or fast based on the distance.
+3. If the distance changes by more than 40cm per 500ms, the servo motor will immediately turn to 0 degrees, regardless of its previous position, and the LED will be turned off.
+
+If the distance is more than 100cm, the servo motor will be set to 180 degrees and the LED will be turned off.
+
+
 Kannst du bitte mir helfen den Code zu ändern.
 der aktuelle Code liegt in andere File "code Stand 02.Feb."
 vielen Dank
