@@ -1,67 +1,93 @@
-int trigPin = 11;    // Trigger
-int echoPin = 12;    // Echo
-int val; 
-long duration, cm;
-
-int LED = 3;          
+#include <Wire.h>
+#include <VL53L1X.h>
 #include <Servo.h>
 
-Servo myservo; 
+VL53L1X sensor;
+
+const int servoPin = 2;
+
+int dist = 0;
+int dist_div = 0;
+int dist_state = 0;
+int dist_state_old = 0;
+int LED = 3;
+
+Servo servo; 
+
 
 void setup() {
-  //Serial Port begin
-  Serial.begin (9600);
-  //Define inputs and outputs
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  myservo.attach(9); 
-  // declare pin 9 to be an output:
+  while (!Serial) {}
+  Serial.begin(115200);
+  Wire.begin();
+  Wire.setClock(400000); // use 400 kHz I2C
+
+  sensor.setTimeout(500);
+  if (!sensor.init())
+  {
+    Serial.println("Failed to detect and initialize sensor!");
+    while (1);
+  }
+
+  // Use long distance mode and allow up to 50000 us (50 ms) for a measurement.
+  // You can change these settings to adjust the performance of the sensor, but
+  // the minimum timing budget is 20 ms for short distance mode and 33 ms for
+  // medium and long distance modes. See the VL53L1X datasheet for more
+  // information on range and timing limits.
+  sensor.setDistanceMode(VL53L1X::Long);
+  sensor.setMeasurementTimingBudget(50000);
+
+  // Start continuous readings at a rate of one measurement every 50 ms (the
+  // inter-measurement period). This period should be at least as long as the
+  // timing budget.
+  sensor.startContinuous(50);
+  servo.attach(servoPin);
   pinMode(LED, OUTPUT);
 }
 
 void loop() {
-  // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
-  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(5);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  // put your main code here, to run repeatedly:
+  dist = sensor.read();
+  delay(100);
+  dist_div = dist - sensor.read();
+  
  
-  // Read the signal from the sensor: a HIGH pulse whose
-  // duration is the time (in microseconds) from the sending
-  // of the ping to the reception of its echo off of an object.
-  pinMode(echoPin, INPUT);
-  duration = pulseIn(echoPin, HIGH);
-
-  // Convert the time into a distance
-  cm = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
-
-
-
-  if (int(cm) < 100){
-    if ( int(cm) < 30){
-    myservo.write(0);
-  } 
-  else if (30 < int(cm) < 100){
-    myservo.write(map(cm,30,100,40,180));
-    for (int i=0; i < 100; i++){
-    analogWrite(LED, i);   
-    delay(map(cm,30,100,1,10));                       
-    }
-    for (int i = 100; i > 0; i--){
-    analogWrite(LED, i);   
-    delay(map(cm,30,100,1,10));                       
-    }
+  if (dist < 300) {
+    servo.write(180);
+    analogWrite(LED, 0);
   }
+  else if (dist > 1000){
+    servo.write(0);
+    analogWrite(LED, 0);
+    dist_state = 0;
   }
   else {
-    myservo.write(180);
+    if (abs(dist_div) < 50 && dist_state == 0){
+      servo.write(0);
+      analogWrite(LED, 100);
+      delay(map(dist, 300, 1000, 2000, 100));
+      analogWrite(LED,0);
+      delay(map(dist, 300, 1000, 2000, 100));
+    }
+    else{
+      servo.write(135);
+      dist_state = 1;
+      analogWrite(LED, 100);
+      delay(map(dist, 300, 1000, 1000, 100));
+      analogWrite(LED,0);
+      delay(map(dist, 300, 1000, 1000, 100));
+    } 
   }
- 
-  Serial.print(cm);
-  Serial.print("cm");
-  Serial.println();
-
-  delay(100);
+  if (dist_state == 1 && dist_div < 0 ) {
+      analogWrite(LED, 100);
+      delay(map(dist, 300, 1000, 1000, 100));
+      analogWrite(LED,0);
+      delay(map(dist, 300, 1000, 1000, 100));
   }
+  else {
+      servo.write(map(dist, 300, 1000, 180, 0));
+      analogWrite(LED, 100);
+      delay(map(dist, 300, 1000, 1000, 100));
+      analogWrite(LED,0);
+      delay(map(dist, 300, 1000, 1000, 100));
+  }
+}
